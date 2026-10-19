@@ -1,0 +1,3 @@
+#pragma once
+
+#define PLASMALOGIN_CONFIG_FILE "@PLASMALOGIN_CONFIG_FILE@"

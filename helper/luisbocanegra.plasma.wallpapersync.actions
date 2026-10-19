@@ -1,0 +1,12 @@
+[Domain]
+Name=PlasmaLogin Wallpaper Sync
+
+[luisbocanegra.plasma.wallpapersync.save]
+Name=Sync wallpaper to the Plasma Login screen
+Description=Change the login screen wallpaper
+Policy=yes
+
+[luisbocanegra.plasma.wallpapersync.read]
+Name=Read the Plasma Login config
+Description=Read the login screen config
+Policy=yes
