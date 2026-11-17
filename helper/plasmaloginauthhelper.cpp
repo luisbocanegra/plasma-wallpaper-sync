@@ -25,6 +25,8 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QMimeDatabase>
 #include <QMimeType>
 #include <QSharedPointer>
@@ -174,15 +176,18 @@ ActionReply PlasmaLoginAuthHelper::save(const QVariantMap &args)
     QString configStr = args[QStringLiteral("config")].toString();
 
     // Only write if we have content
+    ActionReply errorReply = ActionReply::HelperErrorReply();
     if (!configStr.isEmpty()) {
         QFile file(QLatin1String(PLASMALOGIN_CONFIG_FILE));
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate, standardPermissions)) {
-            return ActionReply::HelperErrorReply();
+            errorReply.setErrorDescription(file.errorString());
+            return errorReply;
         }
 
         if (configStr.toUtf8().size() > 1 * 1024 * 1024) {
-            qWarning() << "Config size is greater than 1 MiB";
-            return ActionReply::HelperErrorReply();
+            errorReply.setErrorDescription("Config size is greater than 1 MiB");
+            return errorReply;
+
         } else {
             QTextStream out(&file);
             out << configStr;
@@ -203,15 +208,15 @@ ActionReply PlasmaLoginAuthHelper::save(const QVariantMap &args)
     if (auto opt = plasmaloginUserHomeDir()) {
         homeDirPath = *opt;
     } else {
-        qWarning() << "Could not determine home directory for plasmalogin user";
-        return ActionReply::HelperErrorReply();
+        errorReply.setErrorDescription("Could not determine home directory for plasmalogin user");
+        return errorReply;
     }
 
     if (!adjustPermissionsFromPlasma6_6()) {
         return ActionReply::HelperErrorReply();
     }
 
-    bool rc = runAsPlasmaLoginUser([homeDirPath, args]() {
+    bool rc = runAsPlasmaLoginUser([homeDirPath, args, &errorReply]() {
         QDir homeDir(homeDirPath);
         QDir wallpaperDir(homeDir.absoluteFilePath("wallpapers"));
         if (!wallpaperDir.removeRecursively()) {
@@ -221,7 +226,7 @@ ActionReply PlasmaLoginAuthHelper::save(const QVariantMap &args)
 
         auto rootWallpaperFd = open(wallpaperDir.path().toUtf8().constData(), O_RDONLY | O_DIRECTORY);
         if (rootWallpaperFd < 0) {
-            qWarning() << "Could not load root wallpaper directory." << qPrintable(strerror(errno));
+            errorReply.setErrorDescription("Could not load root wallpaper directory." + QString(strerror(errno)));
             return false;
         }
         auto closeRootWallpaperFd = qScopeGuard([&]() {
@@ -233,14 +238,14 @@ ActionReply PlasmaLoginAuthHelper::save(const QVariantMap &args)
             // This shouldn't be needed with the explicit openat flags, but
             // another check can't hurt
             if (wallpaper.contains("..")) {
-                qWarning() << "Badly formed wallpaper name detected, aborting";
+                errorReply.setErrorDescription("Badly formed wallpaper name detected, aborting");
                 return false;
             }
 
             const QString relativeFilePath = "wallpapers/" + wallpaper;
             const QString relativeParentDirectory = relativeFilePath.left(relativeFilePath.lastIndexOf("/"));
             if (!homeDir.mkpath(relativeParentDirectory)) {
-                qWarning() << "Could not create new wallpaper directory";
+                errorReply.setErrorDescription("Could not create new wallpaper directory");
                 return false;
             }
 
@@ -249,24 +254,24 @@ ActionReply PlasmaLoginAuthHelper::save(const QVariantMap &args)
                                    .resolve = RESOLVE_BENEATH | RESOLVE_NO_MAGICLINKS};
             int outFd = syscall(SYS_openat2, rootWallpaperFd, wallpaper.toUtf8().constData(), &how, sizeof(struct open_how));
             if (outFd < 0) {
-                qWarning() << "Could not open wallpaper file." << qPrintable(strerror(errno));
+                errorReply.setErrorDescription("Could not open wallpaper file." + QString(strerror(errno)));
                 return false;
             }
             QFile file;
             if (!file.open(outFd, QIODevice::WriteOnly | QIODevice::Truncate, QFileDevice::AutoCloseHandle)) {
-                qWarning() << "Could not open wallpaper directory from FD.";
+                errorReply.setErrorDescription("Could not open wallpaper directory from FD.");
                 return false;
             }
 
             QDataStream out(&file);
             QDBusUnixFileDescriptor fd = args.value("_fd_" + wallpaper).value<QDBusUnixFileDescriptor>();
             if (!fd.isValid() || !isRegularFd(fd.fileDescriptor())) {
-                qWarning() << "Could not retrieve wallpaper" << wallpaper;
+                errorReply.setErrorDescription("Could not retrieve wallpaper" + wallpaper);
                 continue;
             }
             QFile wallpaperIn;
             if (!wallpaperIn.open(fd.fileDescriptor(), QIODevice::ReadOnly)) {
-                qWarning() << "Failed to open wallpaper";
+                errorReply.setErrorDescription("Failed to open wallpaper");
                 return false;
             }
             QByteArray buf(4096, 0);
@@ -275,7 +280,7 @@ ActionReply PlasmaLoginAuthHelper::save(const QVariantMap &args)
                 if (n == 0) {
                     break;
                 } else if (n < 0) {
-                    qWarning() << "Failed to transfer wallpaper data for file" << relativeFilePath;
+                    errorReply.setErrorDescription("Failed to transfer wallpaper data for file" + relativeFilePath);
                     return false;
                 } else {
                     out.writeRawData(buf.data(), n);
@@ -288,7 +293,7 @@ ActionReply PlasmaLoginAuthHelper::save(const QVariantMap &args)
     if (rc) {
         return ActionReply::SuccessReply();
     } else {
-        return ActionReply::HelperErrorReply();
+        return errorReply;
     }
 }
 

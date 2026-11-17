@@ -68,7 +68,7 @@ static int setLockScreenWallpaper(const QString &plugin, const QString &configJs
     return 0;
 }
 
-QVariantMap syncWallpaper(const QUrl &imageUri)
+QVariantMap syncWallpaper(const QUrl &imageUri, QString &error)
 {
     const QString baseName = imageUri.fileName();
     const QString imagePath = imageUri.toLocalFile();
@@ -81,7 +81,7 @@ QVariantMap syncWallpaper(const QUrl &imageUri)
     QStringList files;
 
     // We open the file and pass an FD so the root helper knows our user can read the contents
-    auto addFile = [&wallpaperArgs, &files](const QString &relativePath, const QString &fullPath) {
+    auto addFile = [&wallpaperArgs, &files, &error](const QString &relativePath, const QString &fullPath) {
         files.append(relativePath);
         QFile imageFile(fullPath);
         if (imageFile.open(QIODevice::ReadOnly)) {
@@ -89,7 +89,7 @@ QVariantMap syncWallpaper(const QUrl &imageUri)
             // Hence one entry for the list of files, then one entry per file descriptor.
             wallpaperArgs["_fd_" + relativePath] = QVariant::fromValue(QDBusUnixFileDescriptor(imageFile.handle()));
         } else {
-            qWarning() << "Could not read file" << fullPath;
+            error = "Could not read file " + fullPath;
         }
     };
 
@@ -136,31 +136,8 @@ static int setPlasmaLoginWallpaper(const QString &plugin, const QString &configJ
     }
 
     QVariantMap args;
-    QString currentContents;
-    args[u"filename"_s] = PLASMALOGIN_CONFIG_FILE;
-    KAuth::Action readAction("luisbocanegra.plasma.wallpapersync.read");
-    readAction.setHelperId("luisbocanegra.plasma.wallpapersync");
-    readAction.setArguments(args);
-    ExecuteJob *readJob = readAction.execute();
-    if (!readJob->exec()) {
-        qDebug() << "KAuth returned an error code:" << readJob->error();
-    } else {
-        currentContents = readJob->data()["contents"].toString();
-    }
 
     const QString tempFileName = tempDir.path() + QLatin1String("/plasmalogin.conf");
-    QFile file(tempFileName);
-
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qWarning() << "Could not open file for writing:" << file.errorString();
-        return 1;
-    }
-
-    QTextStream out(&file);
-    out << currentContents;
-    out.flush();
-
-    file.close();
 
     KConfig tempConfig(tempFileName, KConfig::SimpleConfig);
     KConfigGroup greeter = tempConfig.group(u"Greeter"_s);
@@ -186,15 +163,26 @@ static int setPlasmaLoginWallpaper(const QString &plugin, const QString &configJ
 
         if (values.contains(u"Image"_s)) {
             // Copy the original image to somewhere the greeter can read it
-            const QUrl imageUri = QUrl(values.value(u"Image"_s)).adjusted(QUrl::StripTrailingSlash);
+            const QUrl imageUri = QUrl(values.value(u"Image"_s), QUrl::StrictMode).adjusted(QUrl::StripTrailingSlash);
+            if (!imageUri.isValid() || imageUri.scheme().isEmpty()) {
+                error = "not a valid url, e.g 'file:///path/to/wallpaper.png'";
+                return 1;
+            }
             if (imageUri.isLocalFile()) {
-                args.insert(syncWallpaper(imageUri));
+                args.insert(syncWallpaper(imageUri, error));
+
+                if (!error.isEmpty()) {
+                    return 1;
+                }
 
                 QUrl adjustedUri = QUrl();
                 adjustedUri.setScheme(u"file"_s);
                 adjustedUri.setPath(homeDirPath + "/wallpapers/" + imageUri.fileName());
                 adjustedUri.setFragment(imageUri.fragment());
                 imageWallpaperGroup.group(u"General"_s).writeEntry(u"Image"_s, adjustedUri);
+            } else {
+                error = "'" + imageUri.toString() + "' is not a local file";
+                return 1;
             }
         }
     }
@@ -218,9 +206,6 @@ static int setPlasmaLoginWallpaper(const QString &plugin, const QString &configJ
 
         QTextStream in(&tempFile);
         config = in.readAll();
-    } else {
-        // If nothing changed, preserve the existing file content
-        config = currentContents;
     }
 
     args[u"config"_s] = config;
@@ -230,7 +215,7 @@ static int setPlasmaLoginWallpaper(const QString &plugin, const QString &configJ
     saveAction.setArguments(args);
     KAuth::ExecuteJob *saveJob = saveAction.execute();
     if (!saveJob->exec()) {
-        qWarning() << saveJob->errorString();
+        error = saveJob->errorString();
         return 1;
     }
     return 0;
@@ -256,11 +241,8 @@ int main(int argc, char *argv[])
     QCommandLineOption pluginOption(QStringList() << "plugin", "The wallpaper plugin to use, by default org.kde.image.", "pluginName", "org.kde.image");
     parser.addOption(pluginOption);
 
-    QCommandLineOption configOption(QStringList() << "config", "he plugin configuration in JSON format", "jsonString");
+    QCommandLineOption configOption(QStringList() << "config", "The plugin configuration in JSON format", "jsonString");
     parser.addOption(configOption);
-
-    QCommandLineOption imageOption(QStringList() << "image", "The wallpaper image to apply (only works with org.kde.image plugin)", "filePath");
-    parser.addOption(imageOption);
 
     parser.process(app);
 
@@ -270,37 +252,23 @@ int main(int argc, char *argv[])
 
     const QString plugin = parser.value(pluginOption);
     QString config = parser.value(configOption);
-    const QString image = parser.value(imageOption);
 
-    if (!config.isEmpty() && !image.isEmpty()) {
-        tsErr << "Can't set " << configOption.names().last() << " and " << imageOption.names().last() << " at the same time" << Qt::endl;
+    if (config.isEmpty()) {
+        tsErr << "Must give config" << Qt::endl;
         parser.showHelp(1);
     }
 
-    if (config.isEmpty() && image.isEmpty()) {
-        tsErr << "Must give a config or image file" << Qt::endl;
-        parser.showHelp(1);
-    }
-
-    if (plugin != pluginOption.defaultValues().first() && !image.isEmpty()) {
-        tsErr << "Changing plugin is not supported when setting an image" << Qt::endl;
-        parser.showHelp(1);
-    }
-
-    if (!image.isEmpty()) {
-        QJsonObject imageConfig{
-            {u"Image"_s, image}};
-        config = QString::fromUtf8(QJsonDocument(imageConfig).toJson(QJsonDocument::Compact));
-    }
-
+    int ret{};
     if (parser.isSet(lockScreenOption)) {
-        setLockScreenWallpaper(plugin, config, error);
+        ret = setLockScreenWallpaper(plugin, config, error);
     }
     if (parser.isSet(plasmaloginOption)) {
-        setPlasmaLoginWallpaper(plugin, config, error);
+        ret = setPlasmaLoginWallpaper(plugin, config, error);
     }
-    if (!error.isEmpty()) {
-        tsErr << error << Qt::endl;
+    if (ret != 0) {
+        if (!error.isEmpty()) {
+            tsErr << error << Qt::endl;
+        }
         return 1;
     }
     return 0;
