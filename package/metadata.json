@@ -14,7 +14,7 @@
 		"Id": "luisbocanegra.wallpaper.sync",
 		"License": "GPL-3.0",
 		"Name": "Wallpaper Sync",
-		"Version": "0.1.0",
+		"Version": "0.1.1",
 		"Website": "https://github.com/luisbocanegra/plasma-wallpaper-sync"
 	},
 	"X-Plasma-API-Minimum-Version": "6.0"
