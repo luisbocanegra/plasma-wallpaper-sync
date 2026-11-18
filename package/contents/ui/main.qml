@@ -82,6 +82,12 @@ PlasmoidItem {
                 setPlasmaLogin(lastUsedPlugin, root.serializedConfig);
             }
         }
+        function onScreensChanged() {
+            console.log(Plasmoid.id, "Monitors changed");
+            if (syncAllScreens) {
+                setDesktopAllScreens(lastUsedPlugin, config);
+            }
+        }
     }
 
     Component.onDestruction: {
