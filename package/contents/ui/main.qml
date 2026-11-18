@@ -227,11 +227,8 @@ PlasmoidItem {
 
     function getConfig() {
         let config = {};
-        for (let key in wallpaperConfig) {
+        for (let key of wallpaperConfig.keys()) {
             if (key.endsWith("Default")) {
-                continue;
-            }
-            if (typeof wallpaperConfig[key] === 'function') {
                 continue;
             }
             console.log(key, wallpaperConfig[key]);
