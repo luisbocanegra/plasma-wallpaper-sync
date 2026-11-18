@@ -34,6 +34,9 @@ PlasmoidItem {
     property bool delay: false
     property bool destroying: false
     property bool completed: false
+    property string serializedConfig
+    property var config: ({})
+    property string lastUsedPlugin
 
     function claimSingleton() {
         if (ActiveSync.activeId === -1 && onDesktop && !destroying && completed) {
@@ -52,6 +55,32 @@ PlasmoidItem {
     function freeSingleton() {
         if (ActiveSync.activeId !== -1) {
             ActiveSync.activeId = -1;
+        }
+    }
+
+    // We need a way to update the login wallpaper before plasmalogin
+    // loads when switching users, this takes advantage of the fact that
+    // the session is locked before that happens
+    DBus.SignalWatcher {
+        busType: DBus.BusType.Session
+        service: "org.freedesktop.ScreenSaver"
+        path: "/ScreenSaver"
+        iface: "org.kde.screensaver"
+        function dbusAboutToLock() {
+            console.log(Plasmoid.id, "About to lock");
+            if (root.syncLoginScreen) {
+                setPlasmaLogin(lastUsedPlugin, root.serializedConfig);
+            }
+        }
+    }
+
+    Connections {
+        target: Qt.application
+        function onAboutToQuit() {
+            console.log(Plasmoid.id, "About to quit");
+            if (root.syncLoginScreen) {
+                setPlasmaLogin(lastUsedPlugin, root.serializedConfig);
+            }
         }
     }
 
@@ -103,7 +132,7 @@ PlasmoidItem {
             reply.finished.connect(() => {
                 if (reply.isError) {
                     const [where, message] = ["Desktop", `Failed to set wallpaper: ${reply.error.message}`];
-                    console.error(message);
+                    console.warn(message);
                     errors.push({
                         where,
                         message
@@ -173,16 +202,19 @@ PlasmoidItem {
         });
     }
 
+    // Plugins may save colors as Color type, we need to convert them
+    // to a format plugins can read back from the configuration
     function serializeConfig(config) {
         const to255 = val => Math.min(255, Math.max(0, Math.round(val * 255)));
+
         return JSON.stringify(config, function (key, value) {
-        // qmlformat off
-        if (typeof value === "object" && value !== null &&
-            typeof value.r === "number" && typeof value.g === "number" &&
-            typeof value.b === "number" && typeof value.a === "number") {
-                // qmlformat on
+            // qmlformat off
+            if (typeof value === "object" && value !== null &&
+                typeof value.r === "number" && typeof value.g === "number" &&
+                typeof value.b === "number" && typeof value.a === "number") {
                 return `${to255(value.r)},${to255(value.g)},${to255(value.b)}`;
             }
+            // qmlformat on
             return value;
         });
     }
@@ -196,34 +228,29 @@ PlasmoidItem {
             if (typeof wallpaperConfig[key] === 'function') {
                 continue;
             }
-            let value = wallpaperConfig[key];
-            let defaultValue = wallpaperConfig[key + "Default"];
-            if (value && value != defaultValue) {
-                config[key] = value;
-            }
+            console.log(key, wallpaperConfig[key]);
+            config[key] = wallpaperConfig[key];
         }
         return config;
     }
 
     function syncWallpaper() {
-        if (!isEnabled || root.pluginName === "") {
+        if (!isEnabled || !root.pluginName) {
             return;
         }
         errors = [];
-        let plugin = pluginName;
-        if (plugin === "org.kde.slideshow") {
-            plugin = "org.kde.image";
+        lastUsedPlugin = pluginName;
+        if (lastUsedPlugin === "org.kde.slideshow") {
+            lastUsedPlugin = "org.kde.image";
         }
-        const config = getConfig();
+        config = getConfig();
+        serializedConfig = serializeConfig(config);
+        console.log(`syncing wallpaper plugin:`, pluginName, "config:", JSON.stringify(config));
         if (syncAllScreens) {
-            setDesktopAllScreens(plugin, config);
+            setDesktopAllScreens(lastUsedPlugin, config);
         }
-        const serialized = serializeConfig(config);
         if (syncLockScreen) {
-            setLockScreen(plugin, serialized);
-        }
-        if (syncLoginScreen) {
-            setPlasmaLogin(plugin, serialized);
+            setLockScreen(lastUsedPlugin, serializedConfig);
         }
     }
 
