@@ -1,0 +1,77 @@
+# Translation of sync in fr
+# Copyright (C) 2026
+# This file is distributed under the same license as the sync package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: sync\n"
+"Report-Msgid-Bugs-To: https://github.com/luisbocanegra/plasma-wallpaper-sync\n"
+"POT-Creation-Date: 2026-11-21 18:15+0800\n"
+"PO-Revision-Date: 2026-11-21 18:15+0800\n"
+"Last-Translator: KairikiFedora <13278297951@sina.cn>\n"
+"Language-Team: French <kde-francophone@kde.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: ../contents/config/config.qml
+msgid "General"
+msgstr "Général"
+
+#: ../contents/ui/configGeneral.qml
+msgid "See README for instructions to install with C++ plugin."
+msgstr "Consultez le README pour les instructions d'installation avec le module C++."
+
+#: ../contents/ui/configGeneral.qml
+msgid "Install instructions"
+msgstr "Instructions d'installation"
+
+#: ../contents/ui/configGeneral.qml
+msgid "Enabled:"
+msgstr "Activé :"
+
+#: ../contents/ui/configGeneral.qml
+msgid "Other screens:"
+msgstr "Autres écrans :"
+
+#: ../contents/ui/configGeneral.qml
+msgid "Lock screen:"
+msgstr "Écran de verrouillage :"
+
+#: ../contents/ui/configGeneral.qml
+msgid "Requires kwriteconfig6 or C++ plugin"
+msgstr "Nécessite kwriteconfig6 ou le module C++"
+
+#: ../contents/ui/configGeneral.qml
+msgid "Login screen:"
+msgstr "Écran de connexion :"
+
+#: ../contents/ui/configGeneral.qml
+msgid "Requires C++ plugin and Plasma Login Manager. Only works with built-in wallpaper plugins."
+msgstr "Nécessite le module C++ et Plasma Login Manager. Fonctionne uniquement avec les modules externes de fond d'écran intégrés."
+
+#: ../contents/ui/main.qml
+msgid "Show widget"
+msgstr "Afficher le composant"
+
+#: ../contents/ui/main.qml
+msgid "Hide widget"
+msgstr "Masquer le composant"
+
+#: ../contents/ui/main.qml
+msgid "Inactive: this widget only works on the desktop"
+msgstr "Inactif : ce composant ne fonctionne que sur le bureau"
+
+#: ../contents/ui/main.qml
+msgid "Something went wrong"
+msgstr "Une erreur est survenue"
+
+#: ../contents/ui/main.qml
+msgid "Inactive: another instance of this widget is already active."
+msgstr "Inactif : une autre instance de ce composant est déjà active."
+
+#: ../contents/ui/main.qml
+msgid "Copy to clipboard"
+msgstr "Copier dans le presse-papiers"

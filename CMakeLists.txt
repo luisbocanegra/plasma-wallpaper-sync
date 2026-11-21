@@ -23,6 +23,22 @@ string(JSON CUR_VERSION GET ${METADATA} KPlugin Version)
 message("Plugin Id: ${PLUGIN_ID}")
 message("Version: ${CUR_VERSION}")
 
+# Build the bundled translation catalogs (*.mo) from package/translate/*.po
+# so they ship inside the plasmoid package. This works for both CMake installs
+# (plasma_install_package copies the whole package/ tree) and the .plasmoid
+# package built with -DPACKAGE_PLASMOID=ON.
+find_program(MSGFMT_EXECUTABLE msgfmt)
+if(MSGFMT_EXECUTABLE)
+    add_custom_target(plasma_wallpaper_sync_translations ALL
+        COMMAND ${CMAKE_COMMAND} -E env bash ${CMAKE_CURRENT_SOURCE_DIR}/package/translate/build.sh
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Building translation catalogs for ${PLUGIN_ID}"
+        VERBATIM
+    )
+else()
+    message(WARNING "msgfmt not found: translation catalogs (.mo) will not be (re)built during the build.")
+endif()
+
 if(INSTALL_PLASMOID)
     find_package(Plasma ${PROJECT_DEP_VERSION} REQUIRED)
     plasma_install_package(package ${PLUGIN_ID})

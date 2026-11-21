@@ -158,7 +158,7 @@ PlasmoidItem {
     Plasmoid.backgroundHints: hideWidget ? PlasmaCore.Types.NoBackground : PlasmaCore.Types.DefaultBackground
     PlasmaCore.Action {
         id: hideWidgetAction
-        text: (Plasmoid.configuration.hideWidget ? i18n("Show") : i18n("Hide")) + " widget"
+        text: Plasmoid.configuration.hideWidget ? i18n("Show widget") : i18n("Hide widget")
         icon.name: "visibility-symbolic"
         onTriggered: {
             Plasmoid.configuration.hideWidget = !Plasmoid.configuration.hideWidget;

@@ -1,0 +1,77 @@
+# Translation of sync in ko
+# Copyright (C) 2026
+# This file is distributed under the same license as the sync package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: sync\n"
+"Report-Msgid-Bugs-To: https://github.com/luisbocanegra/plasma-wallpaper-sync\n"
+"POT-Creation-Date: 2026-11-21 18:15+0800\n"
+"PO-Revision-Date: 2026-11-21 18:15+0800\n"
+"Last-Translator: KairikiFedora <13278297951@sina.cn>\n"
+"Language-Team: Korean <kde-i18n-ko@kde.org>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: ../contents/config/config.qml
+msgid "General"
+msgstr "일반"
+
+#: ../contents/ui/configGeneral.qml
+msgid "See README for instructions to install with C++ plugin."
+msgstr "C++ 플러그인과 함께 설치하는 방법은 README를 참조하세요."
+
+#: ../contents/ui/configGeneral.qml
+msgid "Install instructions"
+msgstr "설치 지침"
+
+#: ../contents/ui/configGeneral.qml
+msgid "Enabled:"
+msgstr "활성화:"
+
+#: ../contents/ui/configGeneral.qml
+msgid "Other screens:"
+msgstr "다른 화면:"
+
+#: ../contents/ui/configGeneral.qml
+msgid "Lock screen:"
+msgstr "잠금 화면:"
+
+#: ../contents/ui/configGeneral.qml
+msgid "Requires kwriteconfig6 or C++ plugin"
+msgstr "kwriteconfig6 또는 C++ 플러그인 필요"
+
+#: ../contents/ui/configGeneral.qml
+msgid "Login screen:"
+msgstr "로그인 화면:"
+
+#: ../contents/ui/configGeneral.qml
+msgid "Requires C++ plugin and Plasma Login Manager. Only works with built-in wallpaper plugins."
+msgstr "C++ 플러그인과 Plasma 로그인 관리자가 필요합니다. 내장 배경 화면 플러그인에서만 작동합니다."
+
+#: ../contents/ui/main.qml
+msgid "Show widget"
+msgstr "위젯 표시"
+
+#: ../contents/ui/main.qml
+msgid "Hide widget"
+msgstr "위젯 숨기기"
+
+#: ../contents/ui/main.qml
+msgid "Inactive: this widget only works on the desktop"
+msgstr "비활성: 이 위젯은 데스크톱에서만 작동합니다"
+
+#: ../contents/ui/main.qml
+msgid "Something went wrong"
+msgstr "문제가 발생했습니다"
+
+#: ../contents/ui/main.qml
+msgid "Inactive: another instance of this widget is already active."
+msgstr "비활성: 이 위젯의 다른 인스턴스가 이미 활성화되어 있습니다."
+
+#: ../contents/ui/main.qml
+msgid "Copy to clipboard"
+msgstr "클립보드에 복사"

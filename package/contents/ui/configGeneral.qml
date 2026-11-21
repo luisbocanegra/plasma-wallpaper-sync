@@ -21,7 +21,7 @@ KCM.SimpleKCM {
             text: i18n("See README for instructions to install with C++ plugin.")
             visible: !Plasmoid.configuration.pluginAvailable
             actions: Kirigami.Action {
-                text: "Install instructions"
+                text: i18n("Install instructions")
                 icon.name: "open-link-symbolic"
                 onTriggered: Qt.openUrlExternally("https://github.com/luisbocanegra/plasma-wallpaper-sync#build-from-source#installation")
             }

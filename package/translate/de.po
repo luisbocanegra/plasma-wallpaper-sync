@@ -1,0 +1,77 @@
+# Translation of sync in de
+# Copyright (C) 2026
+# This file is distributed under the same license as the sync package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: sync\n"
+"Report-Msgid-Bugs-To: https://github.com/luisbocanegra/plasma-wallpaper-sync\n"
+"POT-Creation-Date: 2026-11-21 18:15+0800\n"
+"PO-Revision-Date: 2026-11-21 18:15+0800\n"
+"Last-Translator: KairikiFedora <13278297951@sina.cn>\n"
+"Language-Team: German <kde-i18n-de@kde.org>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../contents/config/config.qml
+msgid "General"
+msgstr "Allgemein"
+
+#: ../contents/ui/configGeneral.qml
+msgid "See README for instructions to install with C++ plugin."
+msgstr "Siehe README für Anleitungen zur Installation mit C++-Plugin."
+
+#: ../contents/ui/configGeneral.qml
+msgid "Install instructions"
+msgstr "Installationsanleitungen"
+
+#: ../contents/ui/configGeneral.qml
+msgid "Enabled:"
+msgstr "Aktiviert:"
+
+#: ../contents/ui/configGeneral.qml
+msgid "Other screens:"
+msgstr "Andere Bildschirme:"
+
+#: ../contents/ui/configGeneral.qml
+msgid "Lock screen:"
+msgstr "Sperrbildschirm:"
+
+#: ../contents/ui/configGeneral.qml
+msgid "Requires kwriteconfig6 or C++ plugin"
+msgstr "Erfordert kwriteconfig6 oder das C++-Plugin"
+
+#: ../contents/ui/configGeneral.qml
+msgid "Login screen:"
+msgstr "Anmeldebildschirm:"
+
+#: ../contents/ui/configGeneral.qml
+msgid "Requires C++ plugin and Plasma Login Manager. Only works with built-in wallpaper plugins."
+msgstr "Erfordert das C++-Plugin und den Plasma Login Manager. Funktioniert nur mit eingebauten Hintergrundbild-Plugins."
+
+#: ../contents/ui/main.qml
+msgid "Show widget"
+msgstr "Widget anzeigen"
+
+#: ../contents/ui/main.qml
+msgid "Hide widget"
+msgstr "Widget ausblenden"
+
+#: ../contents/ui/main.qml
+msgid "Inactive: this widget only works on the desktop"
+msgstr "Inaktiv: Dieses Widget funktioniert nur auf dem Desktop"
+
+#: ../contents/ui/main.qml
+msgid "Something went wrong"
+msgstr "Etwas ist schiefgelaufen"
+
+#: ../contents/ui/main.qml
+msgid "Inactive: another instance of this widget is already active."
+msgstr "Inaktiv: Eine andere Instanz dieses Widgets ist bereits aktiv."
+
+#: ../contents/ui/main.qml
+msgid "Copy to clipboard"
+msgstr "In die Zwischenablage kopieren"

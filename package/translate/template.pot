@@ -1,0 +1,78 @@
+# Translation of sync in LANGUAGE
+# Copyright (C) 2026
+# This file is distributed under the same license as the sync package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: sync\n"
+"Report-Msgid-Bugs-To: https://github.com/luisbocanegra/plasma-wallpaper-sync\n"
+"POT-Creation-Date: 2026-11-21 18:15+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../contents/config/config.qml
+msgid "General"
+msgstr ""
+
+#: ../contents/ui/configGeneral.qml
+msgid "See README for instructions to install with C++ plugin."
+msgstr ""
+
+#: ../contents/ui/configGeneral.qml
+msgid "Install instructions"
+msgstr ""
+
+#: ../contents/ui/configGeneral.qml
+msgid "Enabled:"
+msgstr ""
+
+#: ../contents/ui/configGeneral.qml
+msgid "Other screens:"
+msgstr ""
+
+#: ../contents/ui/configGeneral.qml
+msgid "Lock screen:"
+msgstr ""
+
+#: ../contents/ui/configGeneral.qml
+msgid "Requires kwriteconfig6 or C++ plugin"
+msgstr ""
+
+#: ../contents/ui/configGeneral.qml
+msgid "Login screen:"
+msgstr ""
+
+#: ../contents/ui/configGeneral.qml
+msgid "Requires C++ plugin and Plasma Login Manager. Only works with built-in wallpaper plugins."
+msgstr ""
+
+#: ../contents/ui/main.qml
+msgid "Show widget"
+msgstr ""
+
+#: ../contents/ui/main.qml
+msgid "Hide widget"
+msgstr ""
+
+#: ../contents/ui/main.qml
+msgid "Inactive: this widget only works on the desktop"
+msgstr ""
+
+#: ../contents/ui/main.qml
+msgid "Something went wrong"
+msgstr ""
+
+#: ../contents/ui/main.qml
+msgid "Inactive: another instance of this widget is already active."
+msgstr ""
+
+#: ../contents/ui/main.qml
+msgid "Copy to clipboard"
+msgstr ""

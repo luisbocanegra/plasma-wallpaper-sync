@@ -3,3 +3,5 @@ build/
 playground
 *.mo
 .cache/
+# Bundled plasmoid translation catalogs must be shipped with the package.
+!package/contents/locale/**/*.mo
