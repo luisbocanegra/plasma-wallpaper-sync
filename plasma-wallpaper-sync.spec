@@ -77,11 +77,9 @@ helper to update plasmalogin's configuration and wallpaper directory.
 %{_qt6_qmldir}/com/github/luisbocanegra/wallpapersync/
 
 %changelog
-* Sat Nov 21 2026 KairikiFedora <13278297951@sina.cn> - 0.1.0-2
+* Sat Nov 21 2026 KairikiFedora <13278297951@sina.cn> - 0.1.0-1
 - Fix packaging of the KAuth helper: ship the generated .policy file
   (not the .actions source) and the D-Bus system .conf/.service files;
   drop the incorrect setuid attribute on the helper binary.
-
-* Sat Nov 21 2026 KairikiFedora <13278297951@sina.cn> - 0.1.0-1
 - Initial RPM package with German, French, Japanese, Korean, Simplified
   Chinese and Traditional Chinese translations.
