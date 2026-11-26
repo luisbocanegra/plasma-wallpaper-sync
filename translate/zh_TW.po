@@ -1,0 +1,88 @@
+# Chinese (Traditional) translation for luisbocanegra.wallpaper.sync.
+# Copyright (C) 2026 KairikiFedora <13278297951@sina.cn>
+# This file is distributed under the same license as the luisbocanegra.wallpaper.sync package.
+# KairikiFedora <13278297951@sina.cn>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: luisbocanegra.wallpaper.sync\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-20 22:46-0600\n"
+"PO-Revision-Date: 2026-11-26 00:00+0800\n"
+"Last-Translator: KairikiFedora <13278297951@sina.cn>\n"
+"Language-Team: Chinese Traditional <kde-i18n-zh@kde.org>\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: package/contents/config/config.qml:6
+#, kde-format
+msgid "General"
+msgstr "一般"
+
+#: package/contents/ui/configGeneral.qml:21
+#, kde-format
+msgid "See README for instructions to install with C++ plugin."
+msgstr "請參閱 README 以瞭解使用 C++ 外掛安裝的說明。"
+
+#: package/contents/ui/configGeneral.qml:32
+#, kde-format
+msgid "Enabled:"
+msgstr "啟用："
+
+#: package/contents/ui/configGeneral.qml:36
+#, kde-format
+msgid "Other screens:"
+msgstr "其他螢幕："
+
+#: package/contents/ui/configGeneral.qml:42
+#, kde-format
+msgid "Lock screen:"
+msgstr "鎖定畫面："
+
+#: package/contents/ui/configGeneral.qml:47
+#, kde-format
+msgid "Requires kwriteconfig6 or C++ plugin"
+msgstr "需要 kwriteconfig6 或 C++ 外掛"
+
+#: package/contents/ui/configGeneral.qml:55
+#, kde-format
+msgid "Login screen:"
+msgstr "登入畫面："
+
+#: package/contents/ui/configGeneral.qml:62
+#, kde-format
+msgid "Requires C++ plugin and Plasma Login Manager. Only works with built-in wallpaper plugins."
+msgstr "需要 C++ 外掛與 Plasma Login Manager。僅適用於內建桌布外掛。"
+
+#: package/contents/ui/main.qml:161
+#, kde-format
+msgid "Hide"
+msgstr "隱藏"
+
+#: package/contents/ui/main.qml:161
+#, kde-format
+msgid "Show"
+msgstr "顯示"
+
+#: package/contents/ui/main.qml:372
+#, kde-format
+msgid "Inactive: this widget only works on the desktop"
+msgstr "未啟用：此小工具僅能在桌面上運作"
+
+#: package/contents/ui/main.qml:374
+#, kde-format
+msgid "Something went wrong"
+msgstr "發生錯誤"
+
+#: package/contents/ui/main.qml:376
+#, kde-format
+msgid "Inactive: another instance of this widget is already active."
+msgstr "未啟用：此小工具的另一個實例已在運作中。"
+
+#: package/contents/ui/main.qml:440
+#, kde-format
+msgid "Copy to clipboard"
+msgstr "複製到剪貼簿"
